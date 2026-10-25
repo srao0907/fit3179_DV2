@@ -1,0 +1,245 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Line chart: share of Australians aged 15+ who volunteered, 2010-2025 (ABS General Social Survey via Volunteering Australia)",
+  "width": "container",
+  "height": 320,
+  "data": {
+    "url": "data/gss_trend.csv",
+    "format": {
+      "parse": {
+        "year": "number",
+        "rate": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.type + ' volunteering: ' + format(datum.rate, '.1f') + '% of Australians aged 15+ in ' + datum.year",
+      "as": "Summary"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "title": null,
+      "scale": {
+        "domain": [
+          2009,
+          2027.5
+        ],
+        "zero": false,
+        "nice": false
+      },
+      "axis": {
+        "values": [
+          2010,
+          2014,
+          2019,
+          2020,
+          2025
+        ],
+        "format": "d",
+        "grid": false
+      }
+    },
+    "y": {
+      "field": "rate",
+      "type": "quantitative",
+      "title": "% of Australians aged 15+",
+      "scale": {
+        "domain": [
+          0,
+          40
+        ]
+      }
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "start": 2020,
+            "end": 2022
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "color": "#efe9df"
+      },
+      "encoding": {
+        "x": {
+          "field": "start",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "end"
+        },
+        "y": {
+          "value": 0
+        },
+        "y2": {
+          "value": 320
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 2021,
+            "text": "COVID-19 lockdowns"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "color": "#6b6862",
+        "y": 12
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": null,
+        "text": {
+          "field": "text"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "point": {
+          "filled": true,
+          "size": 70
+        }
+      },
+      "encoding": {
+        "color": {
+          "field": "type",
+          "type": "nominal",
+          "title": "Type of volunteering",
+          "scale": {
+            "domain": [
+              "Formal",
+              "Informal"
+            ],
+            "range": [
+              "#2a78d6",
+              "#eb6834"
+            ]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "Summary",
+            "title": " "
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == 2010"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 8,
+        "dy": -12,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#1c5cab"
+      },
+      "encoding": {
+        "text": {
+          "value": "36.2% in 2010: more than 1 in 3"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == 2025 && datum.type == 'Formal'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -10,
+        "dy": 18,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#1c5cab"
+      },
+      "encoding": {
+        "text": {
+          "value": "22.6% in 2025: about 1 in 5"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == 2019 && datum.type == 'Informal'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -10,
+        "dy": -10,
+        "fontSize": 12,
+        "color": "#a8461b"
+      },
+      "encoding": {
+        "text": {
+          "value": "Informal help first measured in 2019"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == 2025"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 10,
+        "fontSize": 12,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "text": {
+          "field": "type"
+        },
+        "color": {
+          "field": "type",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Formal",
+              "Informal"
+            ],
+            "range": [
+              "#2a78d6",
+              "#eb6834"
+            ]
+          },
+          "legend": null
+        }
+      }
+    }
+  ]
+}

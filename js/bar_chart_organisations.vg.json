@@ -1,0 +1,52 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Sorted horizontal bar chart: % of formal volunteers who helped each type of organisation in 2025 (ABS GSS 2025 via Volunteering Australia). The menu switches between all volunteers, men and women, and the bars re-sort. People could choose more than one type, so bars add to more than 100%.",
+  "width": "container",
+  "height": 400,
+  "data": {"url": "data/gss_orgs_2025.csv"},
+  "params": [
+    {
+      "name": "Group",
+      "value": "total",
+      "bind": {
+        "input": "select",
+        "options": ["total", "men", "women"],
+        "labels": ["All volunteers", "Men", "Women"],
+        "name": "Show: "
+      }
+    }
+  ],
+  "transform": [
+    {"calculate": "datum[Group]", "as": "share"},
+    {"calculate": "datum.org + ': ' + format(datum.share, '.1f') + '% of ' + (Group == 'total' ? 'all volunteers' : Group == 'men' ? 'male volunteers' : 'female volunteers') + ' (men ' + format(datum.men, '.1f') + '%, women ' + format(datum.women, '.1f') + '%)'", "as": "Summary"}
+  ],
+  "encoding": {
+    "y": {
+      "field": "org", "type": "nominal", "title": null,
+      "sort": {"field": "share", "order": "descending"},
+      "axis": {"labelLimit": 260, "labelFontSize": 12, "labelColor": "#1f1e1c", "domain": false, "ticks": false, "grid": false}
+    },
+    "x": {
+      "field": "share", "type": "quantitative",
+      "title": "% of formal volunteers",
+      "scale": {"domain": [0, 45]},
+      "axis": {"grid": true}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "cornerRadiusEnd": 3, "height": {"band": 0.72}},
+      "encoding": {
+        "color": {
+          "condition": {"test": "datum.org == 'Sport and physical recreation'", "value": "#2a78d6"},
+          "value": "#b7d3f6"
+        },
+        "tooltip": [{"field": "Summary", "title": " "}]
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "left", "dx": 4, "fontSize": 12, "color": "#5c5a55"},
+      "encoding": {"text": {"field": "share", "format": ".1f"}}
+    }
+  ]
+}

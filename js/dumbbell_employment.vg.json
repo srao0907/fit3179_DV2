@@ -1,0 +1,179 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Dumbbell (connected dot plot): volunteering rate by labour force status, 2020 (light) and 2025 (dark). Hollow dots = estimates the ABS flags as having a high margin of error. Radio buttons switch between formal and informal volunteering.",
+  "width": "container",
+  "height": 230,
+  "data": {
+    "url": "data/gss_labour.csv",
+    "format": {
+      "parse": {
+        "year": "number",
+        "order": "number",
+        "formal": "number",
+        "informal": "number"
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "Volunteering_type",
+      "value": "formal",
+      "bind": {
+        "input": "radio",
+        "options": [
+          "formal",
+          "informal"
+        ],
+        "labels": [
+          "Formal (through an organisation)",
+          "Informal (helping people directly)"
+        ],
+        "name": "Show: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum[Volunteering_type]",
+      "as": "rate"
+    },
+    {
+      "calculate": "datum[Volunteering_type + '_unreliable'] == 1",
+      "as": "unreliable"
+    },
+    {
+      "calculate": "datum.year + ''",
+      "as": "Year"
+    },
+    {
+      "calculate": "datum.status + ', ' + datum.year + ': ' + format(datum.rate, '.1f') + '%' + (datum.unreliable ? ' (high margin of error, use with caution)' : '')",
+      "as": "Summary"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "status",
+      "type": "nominal",
+      "title": null,
+      "sort": {
+        "field": "order"
+      },
+      "axis": {
+        "labelFontSize": 13,
+        "labelColor": "#1f1e1c",
+        "domain": false,
+        "ticks": false,
+        "labelPadding": 10,
+        "grid": false
+      }
+    },
+    "x": {
+      "field": "rate",
+      "type": "quantitative",
+      "title": "% of group who volunteered",
+      "scale": {
+        "domain": [
+          0,
+          45
+        ]
+      },
+      "axis": {
+        "grid": true
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "color": "#9b968d",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "detail": {
+          "field": "status"
+        },
+        "order": {
+          "field": "year"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 170,
+        "opacity": 1
+      },
+      "encoding": {
+        "color": {
+          "field": "Year",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "2020",
+              "2025"
+            ],
+            "range": [
+              "#9ec5f4",
+              "#0d366b"
+            ]
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal",
+            "title": null
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Summary",
+            "title": " "
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.unreliable"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 60,
+        "color": "#ffffff",
+        "opacity": 1
+      },
+      "encoding": {
+        "tooltip": [
+          {
+            "field": "Summary",
+            "title": " "
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == 2025"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -16,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#0d366b"
+      },
+      "encoding": {
+        "text": {
+          "field": "rate",
+          "format": ".1f"
+        }
+      }
+    }
+  ]
+}

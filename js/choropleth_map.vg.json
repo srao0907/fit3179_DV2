@@ -1,0 +1,282 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Choropleth map: % of people aged 15+ who volunteered for an organisation, by Local Government Area (ABS Census 2021)",
+  "width": "container",
+  "height": 560,
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -133,
+      0
+    ]
+  },
+  "params": [
+    {
+      "name": "State_selection",
+      "value": null,
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "NSW",
+          "VIC",
+          "QLD",
+          "SA",
+          "WA",
+          "TAS",
+          "NT",
+          "ACT"
+        ],
+        "labels": [
+          "Show all",
+          "New South Wales",
+          "Victoria",
+          "Queensland",
+          "South Australia",
+          "Western Australia",
+          "Tasmania",
+          "Northern Territory",
+          "ACT"
+        ],
+        "name": "Highlight a state: "
+      }
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "url": "data/lga2021.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "lgas"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "properties.code",
+          "from": {
+            "data": {
+              "url": "data/census2021_lga_volunteering.csv"
+            },
+            "key": "code",
+            "fields": [
+              "name",
+              "state",
+              "rate",
+              "volunteers",
+              "answered"
+            ]
+          }
+        },
+        {
+          "calculate": "format(datum.rate, '.1f') + '% of people aged 15+ volunteered (' + format(datum.volunteers, ',') + ' people)'",
+          "as": "Summary"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.3
+      },
+      "encoding": {
+        "color": {
+          "field": "rate",
+          "type": "quantitative",
+          "title": "% who volunteered",
+          "scale": {
+            "type": "threshold",
+            "domain": [
+              10,
+              15,
+              20,
+              25,
+              30
+            ],
+            "range": [
+              "#e3eefc",
+              "#b7d3f6",
+              "#6da7ec",
+              "#2a78d6",
+              "#1c5cab",
+              "#0d366b"
+            ]
+          },
+          "legend": {
+            "orient": "top-left",
+            "labelExpr": "datum.label"
+          }
+        },
+        "opacity": {
+          "condition": {
+            "test": "State_selection == null || datum.state == State_selection",
+            "value": 1
+          },
+          "value": 0.15
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "type": "nominal",
+            "title": "Council"
+          },
+          {
+            "field": "state",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "Summary",
+            "type": "nominal",
+            "title": "Volunteering"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/states.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "#3a3936",
+        "strokeWidth": 0.9
+      }
+    },
+    {
+      "data": {
+        "url": "data/census2021_lga_volunteering.csv"
+      },
+      "transform": [
+        {
+          "filter": "datum.name == 'Mount Marshall' || datum.name == 'Kimba' || datum.name == 'Blacktown'"
+        },
+        {
+          "calculate": "datum.name == 'Blacktown' ? 'Blacktown (Sydney) ' + datum.rate + '%' : datum.name + ' ' + datum.rate + '%'",
+          "as": "label"
+        }
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "circle",
+            "size": 40,
+            "color": "#1f1e1c",
+            "stroke": "#ffffff",
+            "strokeWidth": 1.5,
+            "opacity": 1
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 8,
+            "dy": -8,
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#1f1e1c"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.name != 'Kimba'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 136.23,
+            "lat": -33.05,
+            "lon2": 133.2,
+            "lat2": -36.6,
+            "label": "Kimba 48.7%"
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "rule",
+            "color": "#1f1e1c",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "longitude2": {
+              "field": "lon2"
+            },
+            "latitude2": {
+              "field": "lat2"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "right",
+            "dx": -4,
+            "dy": 6,
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#1f1e1c"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon2",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat2",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

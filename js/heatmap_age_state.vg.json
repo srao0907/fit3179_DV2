@@ -1,0 +1,134 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Heatmap: share of each age group who volunteered for an organisation, by state (ABS Census 2021). Rows = states (sorted by overall rate), columns = age groups, colour lightness = rate.",
+  "width": "container",
+  "height": 300,
+  "data": {
+    "url": "data/census2021_state_age.csv"
+  },
+  "encoding": {
+    "x": {
+      "field": "age",
+      "type": "ordinal",
+      "sort": {
+        "field": "order"
+      },
+      "title": "Age group",
+      "axis": {
+        "labelAngle": 0,
+        "orient": "top",
+        "domain": false,
+        "ticks": false,
+        "grid": false,
+        "labelFontSize": 10.5
+      }
+    },
+    "y": {
+      "field": "state",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "ACT",
+        "TAS",
+        "SA",
+        "WA",
+        "NT",
+        "QLD",
+        "VIC",
+        "NSW"
+      ],
+      "axis": {
+        "labelFontWeight": 600,
+        "domain": false,
+        "ticks": false,
+        "grid": false
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "stroke": "#fcfcfb",
+        "strokeWidth": 2,
+        "cornerRadius": 3
+      },
+      "encoding": {
+        "color": {
+          "field": "rate",
+          "type": "quantitative",
+          "title": "% of age group who volunteered",
+          "scale": {
+            "domain": [
+              5,
+              12,
+              19,
+              26
+            ],
+            "range": [
+              "#eef4fd",
+              "#9ec5f4",
+              "#2a78d6",
+              "#0d366b"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "gradientLength": 240
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Summary",
+            "title": " "
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 11
+      },
+      "encoding": {
+        "text": {
+          "field": "rate",
+          "format": ".0f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.rate >= 17",
+            "value": "#ffffff"
+          },
+          "value": "#1f1e1c"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.age == '65–74'"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "fill": null,
+        "stroke": "#1f1e1c",
+        "strokeWidth": 2,
+        "cornerRadius": 3
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum.state + ', aged ' + datum.age + ': ' + format(datum.rate, '.1f') + '% volunteered'",
+      "as": "Summary"
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

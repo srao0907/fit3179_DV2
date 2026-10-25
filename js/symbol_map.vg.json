@@ -1,0 +1,262 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Proportional symbol map: number of people who volunteered in each Local Government Area (ABS Census 2021)",
+  "width": "container",
+  "height": 520,
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -133,
+      0
+    ]
+  },
+  "params": [
+    {
+      "name": "Minimum_volunteers",
+      "value": 15000,
+      "bind": {
+        "input": "range",
+        "min": 5000,
+        "max": 60000,
+        "step": 5000,
+        "name": "Show councils with at least this many volunteers: "
+      }
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "url": "data/states.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#ece8e1",
+        "stroke": "#ffffff",
+        "strokeWidth": 1.2
+      }
+    },
+    {
+      "data": {
+        "url": "data/census2021_lga_volunteering.csv"
+      },
+      "transform": [
+        {
+          "filter": "isValid(datum.lon)"
+        },
+        {
+          "filter": "datum.volunteers >= Minimum_volunteers"
+        },
+        {
+          "calculate": "format(datum.volunteers, ',') + ' volunteers (' + format(datum.rate, '.1f') + '% of people aged 15+)'",
+          "as": "Summary"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "color": "#2a78d6",
+        "opacity": 0.45,
+        "stroke": "#0d366b",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "volunteers",
+          "type": "quantitative",
+          "title": "Number of volunteers",
+          "scale": {
+            "domain": [
+              0,
+              160000
+            ],
+            "range": [
+              0,
+              2400
+            ]
+          },
+          "legend": {
+            "orient": "bottom-left",
+            "values": [
+              10000,
+              50000,
+              150000
+            ],
+            "labelExpr": "format(datum.value, ',')"
+          }
+        },
+        "order": {
+          "field": "volunteers",
+          "sort": "descending"
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "type": "nominal",
+            "title": "Council"
+          },
+          {
+            "field": "state",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "Summary",
+            "type": "nominal",
+            "title": "Volunteering"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 152.93,
+            "lat": -27.47,
+            "text": "Brisbane City Council:",
+            "text2": "161,021 volunteers, the most of any council",
+            "align": "right"
+          },
+          {
+            "lon": 115.86,
+            "lat": -31.95,
+            "text": "Perth is split into many",
+            "text2": "small councils, so its circles are smaller",
+            "align": "left"
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "text",
+            "dx": 26,
+            "dy": -6,
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "align": "left",
+            "color": "#1f1e1c"
+          },
+          "transform": [
+            {
+              "filter": "datum.align == 'left'"
+            }
+          ],
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "text"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "dx": 26,
+            "dy": 9,
+            "fontSize": 12,
+            "align": "left",
+            "color": "#1f1e1c"
+          },
+          "transform": [
+            {
+              "filter": "datum.align == 'left'"
+            }
+          ],
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "text2"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "dx": -40,
+            "dy": -6,
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "align": "right",
+            "color": "#1f1e1c"
+          },
+          "transform": [
+            {
+              "filter": "datum.align == 'right'"
+            }
+          ],
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "text"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "dx": -40,
+            "dy": 9,
+            "fontSize": 12,
+            "align": "right",
+            "color": "#1f1e1c"
+          },
+          "transform": [
+            {
+              "filter": "datum.align == 'right'"
+            }
+          ],
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "text2"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

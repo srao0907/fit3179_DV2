@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Many Hands | Volunteering in Australia</title>
+
+  <!-- Import Vega & Vega-Lite -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+
+  <!-- Import pure.css (grid layout) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS file -->
+  <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
+</head>
+
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="hero">
+    <div class="page">
+      <p class="kicker">Community volunteering in Australia</p>
+      <h1>Many Hands</h1>
+      <p class="intro">Millions of Australians coach junior sport, run op-shops, fight bushfires and check on neighbours, all without pay. But fewer of us volunteer each year, and some communities give far more time than others.</p>
+
+      <!-- three headline numbers -->
+      <div class="pure-g stats">
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="stat"><span class="stat-num">9.5 million</span><span class="stat-label">Australians aged 15+ volunteered in 2025, through an organisation or by helping others directly</span></div>
+        </div>
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="stat"><span class="stat-num">618 million</span><span class="stat-label">hours given to organisations in 2025</span></div>
+        </div>
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="stat"><span class="stat-num">1 in 5</span><span class="stat-label">people volunteer for an organisation, down from more than 1 in 3 in 2010</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <!-- ===================== SECTION 1: DECLINE ===================== -->
+    <section id="decline">
+      <div class="section-title"><span class="section-num">01</span><h2>Fewer of us are volunteering</h2></div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col">
+            <p class="takeaway">Formal volunteering has fallen by more than a third since 2010.</p>
+            <p><strong class="formal">Formal</strong> volunteering means giving time through an organisation, such as a sports club, school or charity. <strong class="informal">Informal</strong> volunteering means helping people outside your household directly, such as minding a neighbour's children.</p>
+            <p>The decline began well before COVID-19, but lockdowns closed clubs and events, and many older volunteers did not return. Informal help has held up better.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2010–2025 surveys</span>
+            <h3>Formal volunteering fell from 36% to 23% in 15 years</h3>
+            <div id="vis_trend" class="vis"></div>
+            <p class="source">Source: ABS General Social Survey 2010–2025, via Volunteering Australia (2026).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col">
+            <p class="takeaway">The volunteering rate fell in every state and territory between 2020 and 2025.</p>
+            <p>Tasmania and the Northern Territory still have the highest rates. Canberra had the steepest fall: it went from the highest rate in the country in 2020 (30.9%) to below the national average in 2025 (22.0%).</p>
+            <p>Each state is drawn as an equal-sized tile, so small states such as the ACT and Tasmania are as easy to see as Western Australia. On a normal map, the ACT would be almost invisible.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2025 survey</span>
+            <h3>Canberra's volunteering rate fell the furthest</h3>
+            <p class="chart-note">Large number: % of people aged 15+ who volunteered for an organisation in 2025. Small number: change since 2020, in percentage points.</p>
+            <div id="vis_cartogram" class="vis"></div>
+            <p class="source">Source: ABS General Social Survey 2020 and 2025, via Volunteering Australia (2026).</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="bridge">State averages still hide big differences within each state. <strong>Which communities volunteer the most?</strong></p>
+    </section>
+
+    <!-- ===================== SECTION 2: WHERE ===================== -->
+    <section id="where">
+      <div class="section-title"><span class="section-num">02</span><h2>Where the volunteers are</h2></div>
+      <p class="source-note"><strong>Two sources, two scales.</strong> The <strong>2021 Census</strong> asked everyone one question, so it can compare all 544 council areas. The <strong>2025 survey</strong> asks fewer people more detailed questions, so its rates are higher and more recent but only available for states. Each chart is labelled with its source.</p>
+
+      <div class="pure-g">
+        <div class="pure-u-1">
+          <div class="card">
+            <span class="badge">2021 Census</span>
+            <h3>Country towns volunteer at two to three times the rate of big cities</h3>
+            <p class="chart-note">Share of people aged 15+ who did unpaid work for an organisation or group in the past year, by local council area. Hover over a council for details, or highlight one state.</p>
+            <div id="vis_choropleth" class="vis"></div>
+            <div class="pure-g annotations">
+              <div class="pure-u-1 pure-u-md-1-3"><p><strong>Farming shires lead.</strong> In Mount Marshall (WA) more than half of adults volunteer, and Kimba (SA) is close behind. Small towns rely on locals to run the footy club, the fire brigade and the hall.</p></div>
+              <div class="pure-u-1 pure-u-md-1-3"><p><strong>Growing suburbs lag.</strong> In outer suburbs such as Blacktown in Sydney, fewer than 1 in 10 volunteer. Long commutes and young families leave little spare time.</p></div>
+              <div class="pure-u-1 pure-u-md-1-3"><p><strong>Read with care.</strong> The Census was held on 10 August 2021, during lockdowns in Sydney and Melbourne. It also only counts volunteering <em>for an organisation</em>, so it misses help given within families and communities.</p></div>
+            </div>
+            <p class="source">Source: ABS Census of Population and Housing 2021, table G23; boundaries: ABS Local Government Areas 2021 (ASGS Ed. 3).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col">
+            <p class="takeaway">High rates in the country, but most volunteers live in the cities.</p>
+            <p>The map above shows the <em>share</em> of people who volunteer. This map shows the <em>number</em> of volunteers. Big city councils have the largest circles because they have the most people, even though a smaller share of residents volunteer.</p>
+            <p>Charities need large numbers of volunteers, which cities can supply. Small towns depend on a high share of locals turning up.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2021 Census</span>
+            <h3>Most volunteers live in a few big councils on the east coast</h3>
+            <p class="chart-note">Circle area shows the number of people who volunteered in each council. To keep circles from piling on top of each other, the map starts with the 46 councils that have at least 15,000 volunteers (44% of all volunteers). Use the slider to show more or fewer.</p>
+            <div id="vis_symbol" class="vis"></div>
+            <p class="source">Source: ABS Census 2021, table G23.</p>
+          </div>
+        </div>
+      </div>
+      <div class="pure-g">
+        <div class="pure-u-1">
+          <div class="card">
+            <span class="badge">2021 Census</span>
+            <h3>Brisbane City alone has more volunteers than all of Tasmania</h3>
+            <p class="chart-note">All 544 councils, grouped by state. <strong>Area</strong> shows the number of volunteers; <strong>colour</strong> shows the share of residents who volunteer. Brisbane (161,021 volunteers) and Tasmania (83,511) are outlined. Big city councils are large but pale; small country councils are tiny but dark.</p>
+            <div id="vis_treemap" class="vis"></div>
+            <p class="source">Source: ABS Census 2021, table G23. Small councils are too small to label; hover over them to see their names.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="bridge">Location matters, but so does stage of life. <strong>Who are Australia's volunteers?</strong></p>
+    </section>
+
+    <!-- ===================== SECTION 3: WHO ===================== -->
+    <section id="who">
+      <div class="section-title"><span class="section-num">03</span><h2>Who gives their time</h2></div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col">
+            <p class="takeaway">Volunteering peaks after retirement in almost every state.</p>
+            <p>Teenagers volunteer through school and sport. Rates dip at 25–34, the years of study, first jobs and young children. They rise again when children start school, and peak at 65–74, when many people have retired but are still active.</p>
+            <p>The outlined 65–74 column is the highest, or equal highest, in every state except Western Australia, where teenagers and 45–54 year olds volunteer slightly more. The darkest cells belong to Canberrans and Tasmanians aged 65–74.</p>
+            <p>New South Wales and Victoria, both in lockdown on Census night, are the palest rows.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2021 Census</span>
+            <h3>People aged 65–74 are the most likely to volunteer</h3>
+            <p class="chart-note">% of each age group who volunteered for an organisation. Read across a row to follow one state through life, or down a column to compare states.</p>
+            <div id="vis_heatmap" class="vis"></div>
+            <p class="source">Source: ABS Census 2021, table G23, summed across council areas. States are sorted from highest to lowest overall rate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2021 Census</span>
+            <h3>Women volunteer more than men at almost every age</h3>
+            <p class="chart-note">% of men and women in each age group who volunteered for an organisation. Both sides use the same scale, starting from zero in the centre.</p>
+            <div id="vis_pyramid" class="vis"></div>
+            <p class="source">Source: ABS Census 2021, table G23 (all of Australia).</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col text-col-right">
+            <p class="takeaway">1.6 million women volunteered, compared with 1.3 million men.</p>
+            <p>The gap is widest at 35–44, when many parents help at their children's schools and sports clubs. Men only catch up after 75.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col">
+            <p class="takeaway">Having a job does not stop people volunteering.</p>
+            <p>Part-time workers have long been among the most likely to volunteer, but their formal volunteering fell sharply after 2020.</p>
+            <p>Formal volunteering by unemployed people also dropped, from 26.3% to 12.2%. The 2020 figure is shown as a hollow dot because the ABS warns it has a high margin of error: few unemployed people were surveyed.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2020 and 2025 surveys</span>
+            <h3>Volunteering fell for part-time workers and unemployed people</h3>
+            <p class="chart-note">Each line joins a group's 2020 rate (light dot) to its 2025 rate (dark dot). Hollow dots are less reliable estimates. Switch between formal and informal volunteering.</p>
+            <div id="vis_dumbbell" class="vis"></div>
+            <p class="source">Source: ABS General Social Survey 2020 and 2025, via Volunteering Australia (2026).</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="bridge">Fewer people volunteer, but those who do give a lot. <strong>How much time do volunteers give, and to what?</strong></p>
+    </section>
+
+
+    <!-- ===================== SECTION 4: HOW MUCH AND WHAT ===================== -->
+    <section id="what">
+      <div class="section-title"><span class="section-num">04</span><h2>Time, causes and reasons</h2></div>
+
+      <div class="pure-g">
+        <div class="pure-u-1">
+          <div class="card">
+            <span class="badge">2025 survey</span>
+            <h3>Volunteers aged 65+ gave 223 million hours, more than a third of the total</h3>
+            <p class="chart-note">Each column is an age group. Its <strong>width</strong> shows the total hours that age group gave to organisations in 2025. The blue bands split each column by how many hours each volunteer gave in the year: the darker the band, the more hours. Numbers in the dark band are the % who gave 100 or more hours, about two hours a week.</p>
+            <div id="vis_marimekko" class="vis"></div>
+            <p class="source">Source: ABS General Social Survey 2025, via Volunteering Australia (2026). Total: 618 million hours. Band shares are rescaled to add to 100% in each column. Estimates for people under 35 have a high margin of error.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+          <div class="card">
+            <span class="badge">2025 survey</span>
+            <h3>Sport is Australia's biggest volunteer movement</h3>
+            <p class="chart-note">% of formal volunteers who helped each type of organisation. People could choose more than one, so the bars add to more than 100%. Use the menu to compare men and women: the bars re-sort.</p>
+            <div id="vis_organisations" class="vis"></div>
+            <p class="source">Source: ABS General Social Survey 2025, via Volunteering Australia (2026).</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-1-3">
+          <div class="text-col text-col-right">
+            <p class="takeaway">One in three volunteers helps a sports club.</p>
+            <p>That rises to 40% of male volunteers, compared with 28% of women. Women are more likely to volunteer for community groups, schools, children's groups and health causes.</p>
+            <p>Religious groups are the second-largest cause for both men and women.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pure-g reasons">
+        <div class="pure-u-1">
+          <h3 class="reasons-title">Why people volunteer, and why they don't</h3>
+        </div>
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="reason">
+            <span class="reason-num">65%</span>
+            <p>of volunteers do it <strong>to help others or their community</strong>, the most common reason given.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="reason">
+            <span class="reason-num">47%</span>
+            <p>of people who don't volunteer say they have <strong>no time</strong>, the most common barrier.</p>
+          </div>
+        </div>
+        <div class="pure-u-1 pure-u-md-1-3">
+          <div class="reason">
+            <span class="reason-num">16%</span>
+            <p>of non-volunteers <strong>weren't sure how to start or had never been asked</strong>. That is the easiest barrier to remove.</p>
+          </div>
+        </div>
+        <div class="pure-u-1">
+          <p class="source">Source: ABS General Social Survey 2025, via Volunteering Australia (2026). People could give more than one reason.</p>
+        </div>
+      </div>
+
+      <div class="closing">
+        <h2>So what can we do?</h2>
+        <p>Australia's volunteers are fewer in number and older on average, but they give more hours than ever. Country towns show what strong local volunteering looks like, while cities hold most of the untapped potential.</p>
+        <p>Short, flexible roles that fit around work and family could bring back the people who stepped away during the pandemic. The simplest step is often the most effective: <strong>ask someone to help.</strong></p>
+        <p>Want to start? Find opportunities near you at <a href="https://govolunteer.com.au/" target="_blank" rel="noopener">GoVolunteer</a>, run by Volunteering Australia.</p>
+      </div>
+    </section>
+
+  </div> <!-- end page -->
+
+  <!-- ===================== FOOTER / METADATA ===================== -->
+  <footer>
+    <div class="page pure-g">
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="text-col">
+          <h4>Data sources</h4>
+          <p><strong>ABS Census of Population and Housing 2021</strong>, General Community Profile, table G23 "Voluntary work for an organisation or group by age by sex", by Local Government Area. <a href="https://www.abs.gov.au/census/find-census-data/datapacks">abs.gov.au</a></p>
+          <p><strong>ABS Local Government Areas 2021</strong> boundaries (ASGS Edition 3), simplified with mapshaper. <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files">abs.gov.au</a></p>
+          <p><strong>Volunteering Australia (May 2026)</strong>, <em>Volunteering Statistics: General Social Survey 2025</em>, based on the ABS General Social Survey 2025. <a href="https://www.volunteeringaustralia.org/resources/key-facts/">volunteeringaustralia.org</a></p>
+        </div>
+      </div>
+      <div class="pure-u-1 pure-u-md-1-2">
+        <div class="text-col">
+          <h4>About</h4>
+          <p>Created by <strong>Simran Rao</strong> for FIT3179 Data Visualisation 2, Monash University.<br>Published 25 October 2026.</p>
+          <p>Built with Vega-Lite, Pure.css and Google Fonts (Fraunces and Figtree).</p>
+          <p><strong>Use of AI:</strong> Claude (Anthropic) was used to help process data, write chart code and check grammar. All figures were checked against the original sources.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== EMBED CHARTS ===================== -->
+  <script type="text/javascript">
+    // Shared settings for every chart: same typeface as the page, quiet grey axes, no frame around the plot
+    var chartOptions = {
+      "actions": false,
+      "config": {
+        "font": "Figtree, Arial, sans-serif",
+        "view": {"stroke": null},
+        "axis": {"labelColor": "#5c5a55", "titleColor": "#5c5a55", "titleFontWeight": "normal",
+                 "labelFontSize": 12, "titleFontSize": 12, "gridColor": "#ebe7e0", "domainColor": "#b9b4ab", "tickColor": "#b9b4ab"},
+        "legend": {"labelColor": "#1f1e1c", "titleColor": "#5c5a55", "titleFontWeight": "normal", "labelFontSize": 12, "titleFontSize": 12}
+      }
+    };
+
+    var specTrend = "js/line_chart_trend.vg.json";
+    var specChoropleth = "js/choropleth_map.vg.json";
+    var specSymbol = "js/symbol_map.vg.json";
+
+    vegaEmbed('#vis_trend', specTrend, chartOptions).catch(console.error);
+    vegaEmbed('#vis_choropleth', specChoropleth, chartOptions).catch(console.error);
+    vegaEmbed('#vis_symbol', specSymbol, chartOptions).catch(console.error);
+
+    var specCartogram = "js/tile_grid_cartogram.vg.json";
+    var specTreemap = "js/treemap_councils.vg.json";
+    var specHeatmap = "js/heatmap_age_state.vg.json";
+
+    vegaEmbed('#vis_cartogram', specCartogram, chartOptions).catch(console.error);
+    vegaEmbed('#vis_treemap', specTreemap, chartOptions).catch(console.error);
+    vegaEmbed('#vis_heatmap', specHeatmap, chartOptions).catch(console.error);
+
+    var specPyramid = "js/pyramid_age_sex.vg.json";
+    var specDumbbell = "js/dumbbell_employment.vg.json";
+    var specMarimekko = "js/marimekko_hours.vg.json";
+    var specOrganisations = "js/bar_chart_organisations.vg.json";
+
+    vegaEmbed('#vis_pyramid', specPyramid, chartOptions).catch(console.error);
+    vegaEmbed('#vis_dumbbell', specDumbbell, chartOptions).catch(console.error);
+    vegaEmbed('#vis_marimekko', specMarimekko, chartOptions).catch(console.error);
+    vegaEmbed('#vis_organisations', specOrganisations, chartOptions).catch(console.error);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+status,order,year,formal,informal,formal_unreliable,informal_unreliable
+Employed full-time,1,2020,23.3,35.9,0,0
+Employed full-time,1,2025,23.4,34.9,0,0
+Employed part-time,2,2020,29.8,39.6,0,0
+Employed part-time,2,2025,25.0,28.3,0,0
+Unemployed,3,2020,26.3,29.7,1,0
+Unemployed,3,2025,12.2,31.3,0,1
+Not in the labour force,4,2020,22.8,23.4,0,0
+Not in the labour force,4,2025,20.7,22.5,0,0

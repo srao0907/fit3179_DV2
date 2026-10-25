@@ -1,0 +1,243 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Tile-grid cartogram: each state or territory is an equal-sized square placed roughly where it sits on the map. Colour = formal volunteering rate in 2025; the small number is the change since 2020 in percentage points (ABS GSS via Volunteering Australia).",
+  "width": 430,
+  "height": 360,
+  "data": {
+    "url": "data/gss_state.csv",
+    "format": {
+      "parse": {
+        "year": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "pivot": "year",
+      "value": "formal",
+      "groupby": [
+        "state",
+        "code"
+      ]
+    },
+    {
+      "calculate": "datum['2025'] - datum['2020']",
+      "as": "change"
+    },
+    {
+      "calculate": "format(datum['2020'], '.1f') + '% in 2020 → ' + format(datum['2025'], '.1f') + '% in 2025 (' + format(datum.change, '+.1f') + ' points)'",
+      "as": "Summary"
+    },
+    {
+      "lookup": "code",
+      "from": {
+        "data": {
+          "values": [
+            {
+              "code": "WA",
+              "gx": 0,
+              "gy": 1
+            },
+            {
+              "code": "NT",
+              "gx": 1,
+              "gy": 0
+            },
+            {
+              "code": "SA",
+              "gx": 1,
+              "gy": 1
+            },
+            {
+              "code": "QLD",
+              "gx": 2,
+              "gy": 0
+            },
+            {
+              "code": "NSW",
+              "gx": 2,
+              "gy": 1
+            },
+            {
+              "code": "ACT",
+              "gx": 3,
+              "gy": 2
+            },
+            {
+              "code": "VIC",
+              "gx": 2,
+              "gy": 2
+            },
+            {
+              "code": "TAS",
+              "gx": 2,
+              "gy": 3
+            }
+          ]
+        },
+        "key": "code",
+        "fields": [
+          "gx",
+          "gy"
+        ]
+      }
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "gx",
+      "type": "ordinal",
+      "axis": null,
+      "scale": {
+        "domain": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "paddingInner": 0.06
+      }
+    },
+    "y": {
+      "field": "gy",
+      "type": "ordinal",
+      "axis": null,
+      "scale": {
+        "domain": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "paddingInner": 0.06
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 6,
+        "stroke": "#fcfcfb",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "color": {
+          "field": "2025",
+          "type": "quantitative",
+          "title": "Formal volunteering, 2025 (%)",
+          "scale": {
+            "domain": [
+              20,
+              22.5,
+              25,
+              27.5
+            ],
+            "range": [
+              "#cde2fb",
+              "#6da7ec",
+              "#1c5cab",
+              "#0d366b"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "gradientLength": 240,
+            "title": "Formal volunteering, 2025 (%)"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State"
+          },
+          {
+            "field": "Summary",
+            "title": "Formal volunteering"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.code == 'ACT'"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "fill": null,
+        "stroke": "#1f1e1c",
+        "strokeWidth": 3,
+        "cornerRadius": 6
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 15,
+        "fontWeight": 700,
+        "dy": -16
+      },
+      "encoding": {
+        "text": {
+          "field": "code"
+        },
+        "color": {
+          "condition": {
+            "test": "datum['2025'] > 24",
+            "value": "#ffffff"
+          },
+          "value": "#0b0b0b"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 20,
+        "fontWeight": 600,
+        "dy": 6
+      },
+      "encoding": {
+        "text": {
+          "field": "2025",
+          "format": ".1f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum['2025'] > 24",
+            "value": "#ffffff"
+          },
+          "value": "#0b0b0b"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "dy": 26
+      },
+      "encoding": {
+        "text": {
+          "field": "change",
+          "format": "+.1f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum['2025'] > 24",
+            "value": "#e8eefc"
+          },
+          "value": "#52514e"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

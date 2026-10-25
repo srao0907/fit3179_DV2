@@ -1,0 +1,253 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Population-pyramid style back-to-back bar chart: % of men and women in each age group who volunteered for an organisation (ABS Census 2021). Both sides share the same scale starting from zero in the centre.",
+  "data": {
+    "url": "data/census2021_age_sex.csv"
+  },
+  "transform": [
+    {
+      "calculate": "format(datum.rate, '.1f') + '% of ' + (datum.sex == 'Men' ? 'men' : 'women') + ' aged ' + datum.age + ' volunteered (' + format(datum.volunteers, ',') + ' people)'",
+      "as": "Summary"
+    }
+  ],
+  "spacing": 0,
+  "hconcat": [
+    {
+      "width": 250,
+      "height": 300,
+      "title": {
+        "text": "Men",
+        "color": "#008300",
+        "fontSize": 14,
+        "anchor": "end"
+      },
+      "transform": [
+        {
+          "filter": "datum.sex == 'Men'"
+        }
+      ],
+      "encoding": {
+        "y": {
+          "field": "age",
+          "type": "ordinal",
+          "sort": [
+            "85+",
+            "75–84",
+            "65–74",
+            "55–64",
+            "45–54",
+            "35–44",
+            "25–34",
+            "20–24",
+            "15–19"
+          ],
+          "axis": null
+        },
+        "x": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              22
+            ],
+            "reverse": true
+          },
+          "title": "% of men who volunteered",
+          "axis": {
+            "grid": true,
+            "values": [
+              0,
+              5,
+              10,
+              15,
+              20
+            ]
+          }
+        }
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "bar",
+            "color": "#008300",
+            "cornerRadiusTopLeft": 3,
+            "cornerRadiusBottomLeft": 3,
+            "height": {
+              "band": 0.75
+            }
+          },
+          "encoding": {
+            "tooltip": [
+              {
+                "field": "Summary",
+                "title": " "
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "right",
+            "dx": -4,
+            "fontSize": 12,
+            "color": "#5c5a55"
+          },
+          "encoding": {
+            "text": {
+              "field": "rate",
+              "format": ".1f"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 56,
+      "height": 300,
+      "transform": [
+        {
+          "filter": "datum.sex == 'Men'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontWeight": "bold",
+        "fontSize": 12,
+        "color": "#1f1e1c"
+      },
+      "encoding": {
+        "y": {
+          "field": "age",
+          "type": "ordinal",
+          "sort": [
+            "85+",
+            "75–84",
+            "65–74",
+            "55–64",
+            "45–54",
+            "35–44",
+            "25–34",
+            "20–24",
+            "15–19"
+          ],
+          "axis": null
+        },
+        "text": {
+          "field": "age"
+        }
+      }
+    },
+    {
+      "width": 250,
+      "height": 300,
+      "title": {
+        "text": "Women",
+        "color": "#6250d6",
+        "fontSize": 14,
+        "anchor": "start"
+      },
+      "transform": [
+        {
+          "filter": "datum.sex == 'Women'"
+        }
+      ],
+      "encoding": {
+        "y": {
+          "field": "age",
+          "type": "ordinal",
+          "sort": [
+            "85+",
+            "75–84",
+            "65–74",
+            "55–64",
+            "45–54",
+            "35–44",
+            "25–34",
+            "20–24",
+            "15–19"
+          ],
+          "axis": null
+        },
+        "x": {
+          "field": "rate",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              22
+            ]
+          },
+          "title": "% of women who volunteered",
+          "axis": {
+            "grid": true,
+            "values": [
+              0,
+              5,
+              10,
+              15,
+              20
+            ]
+          }
+        }
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "bar",
+            "color": "#6250d6",
+            "cornerRadiusTopRight": 3,
+            "cornerRadiusBottomRight": 3,
+            "height": {
+              "band": 0.75
+            }
+          },
+          "encoding": {
+            "tooltip": [
+              {
+                "field": "Summary",
+                "title": " "
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 4,
+            "fontSize": 12,
+            "color": "#5c5a55"
+          },
+          "encoding": {
+            "text": {
+              "field": "rate",
+              "format": ".1f"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.age == '35–44'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 36,
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#1f1e1c"
+          },
+          "encoding": {
+            "text": {
+              "value": "← widest gap"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

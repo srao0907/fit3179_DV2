@@ -1,0 +1,322 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Treemap: every council's volunteers, grouped by state. Rectangle area = number of volunteers; colour = % of people aged 15+ who volunteered (ABS Census 2021). Written in Vega because Vega-Lite has no treemap layout.",
+  "width": 1000,
+  "height": 520,
+  "padding": 4,
+  "autosize": "pad",
+  "data": [
+    {
+      "name": "tree",
+      "url": "data/treemap_state_council.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "volunteers": "number",
+          "rate": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "stratify",
+          "key": "id",
+          "parentKey": "parent"
+        },
+        {
+          "type": "treemap",
+          "field": "volunteers",
+          "sort": {
+            "field": "value",
+            "order": "descending"
+          },
+          "method": "squarify",
+          "round": true,
+          "paddingInner": 1,
+          "paddingTop": 20,
+          "size": [
+            {
+              "signal": "width"
+            },
+            {
+              "signal": "height"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "councils",
+      "source": "tree",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.depth == 2"
+        }
+      ]
+    },
+    {
+      "name": "state_totals",
+      "source": "councils",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "state"
+          ],
+          "fields": [
+            "volunteers"
+          ],
+          "ops": [
+            "sum"
+          ],
+          "as": [
+            "total"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "states",
+      "source": "tree",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.depth == 1"
+        },
+        {
+          "type": "lookup",
+          "from": "state_totals",
+          "key": "state",
+          "fields": [
+            "state"
+          ],
+          "values": [
+            "total"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "highlight",
+      "source": "tree",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.id == 'LGA31000' || datum.id == 'TAS'"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "threshold",
+      "domain": [
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "range": [
+        "#e3eefc",
+        "#b7d3f6",
+        "#6da7ec",
+        "#2a78d6",
+        "#1c5cab",
+        "#0d366b"
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "title": "% who volunteered (same colours as the map)",
+      "orient": "bottom",
+      "direction": "horizontal",
+      "symbolType": "square",
+      "titleFontSize": 12,
+      "labelFontSize": 12,
+      "titleLimit": 400
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "name": "council_rects",
+      "from": {
+        "data": "councils"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "field": "x0"
+          },
+          "y": {
+            "field": "y0"
+          },
+          "x2": {
+            "field": "x1"
+          },
+          "y2": {
+            "field": "y1"
+          },
+          "fill": {
+            "scale": "color",
+            "field": "rate"
+          },
+          "stroke": {
+            "value": "#ffffff"
+          },
+          "strokeWidth": {
+            "value": 0.5
+          },
+          "tooltip": {
+            "signal": "{'Council': datum.name, 'State': datum.state, 'Volunteers': format(datum.volunteers, ','), 'Share who volunteered': format(datum.rate, '.1f') + '%'}"
+          }
+        },
+        "update": {
+          "fillOpacity": {
+            "value": 1
+          }
+        },
+        "hover": {
+          "fillOpacity": {
+            "value": 0.6
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {
+        "data": "states"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {
+            "field": "x0"
+          },
+          "y": {
+            "field": "y0"
+          },
+          "x2": {
+            "field": "x1"
+          },
+          "y2": {
+            "field": "y1"
+          },
+          "fill": {
+            "value": null
+          },
+          "stroke": {
+            "value": "#1f1e1c"
+          },
+          "strokeWidth": {
+            "value": 1.5
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "interactive": false,
+      "from": {
+        "data": "highlight"
+      },
+      "encode": {
+        "enter": {
+          "x": {
+            "signal": "datum.x0 + 1"
+          },
+          "y": {
+            "signal": "datum.y0 + 1"
+          },
+          "x2": {
+            "signal": "datum.x1 - 1"
+          },
+          "y2": {
+            "signal": "datum.y1 - 1"
+          },
+          "fill": {
+            "value": null
+          },
+          "stroke": {
+            "value": "#1f1e1c"
+          },
+          "strokeWidth": {
+            "value": 3
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "states"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {
+            "signal": "datum.x0 + 5"
+          },
+          "y": {
+            "signal": "datum.y0 + 14"
+          },
+          "text": {
+            "signal": "(datum.x1 - datum.x0) > 230 ? datum.name + ': ' + format(datum.total, ',') + ' volunteers' : (datum.x1 - datum.x0) > 90 ? datum.state + ': ' + format(datum.total, ',') : datum.state"
+          },
+          "font": {
+            "value": "Figtree, Arial, sans-serif"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": "bold"
+          },
+          "fill": {
+            "value": "#1f1e1c"
+          },
+          "limit": {
+            "signal": "datum.x1 - datum.x0 - 8"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "councils"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {
+            "signal": "datum.x0 + 4"
+          },
+          "y": {
+            "signal": "datum.y0 + 13"
+          },
+          "text": {
+            "signal": "(datum.x1 - datum.x0) > 75 && (datum.y1 - datum.y0) > 22 ? datum.name : ''"
+          },
+          "font": {
+            "value": "Figtree, Arial, sans-serif"
+          },
+          "fontSize": {
+            "value": 11
+          },
+          "limit": {
+            "signal": "datum.x1 - datum.x0 - 6"
+          },
+          "fill": {
+            "signal": "datum.rate >= 20 ? '#ffffff' : '#1f1e1c'"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Marimekko (mosaic) chart: column width = total hours of formal volunteering given by each age group in 2025; segment height = share of that age group's volunteers in each hours-per-year band (ABS GSS 2025 via Volunteering Australia). Band shares are rescaled to add to 100% in each column.",
+  "width": "container",
+  "height": 320,
+  "data": {
+    "url": "data/gss_hours_2025.csv"
+  },
+  "transform": [
+    {
+      "window": [
+        {
+          "op": "sum",
+          "field": "total_hours_m",
+          "as": "x_end"
+        }
+      ],
+      "sort": [
+        {
+          "field": "order"
+        }
+      ],
+      "frame": [
+        null,
+        0
+      ]
+    },
+    {
+      "calculate": "datum.x_end - datum.total_hours_m",
+      "as": "x_start"
+    },
+    {
+      "calculate": "(datum.x_start + datum.x_end) / 2",
+      "as": "x_mid"
+    },
+    {
+      "fold": [
+        "h1_20",
+        "h21_99",
+        "h100"
+      ],
+      "as": [
+        "band",
+        "pct"
+      ]
+    },
+    {
+      "calculate": "{'h1_20': '1–20 hours a year', 'h21_99': '21–99 hours a year', 'h100': '100+ hours a year'}[datum.band]",
+      "as": "Hours"
+    },
+    {
+      "calculate": "{'h1_20': 3, 'h21_99': 2, 'h100': 1}[datum.band]",
+      "as": "band_order"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "pct",
+          "as": "column_total"
+        }
+      ],
+      "groupby": [
+        "age"
+      ]
+    },
+    {
+      "calculate": "datum.pct / datum.column_total * 100",
+      "as": "share"
+    },
+    {
+      "stack": "share",
+      "groupby": [
+        "age"
+      ],
+      "sort": [
+        {
+          "field": "band_order"
+        }
+      ],
+      "as": [
+        "y_start",
+        "y_end"
+      ]
+    },
+    {
+      "calculate": "'Aged ' + datum.age + ': ' + format(datum.total_hours_m, '.0f') + ' million hours in total. ' + format(datum.pct, '.0f') + '% of these volunteers gave ' + datum.Hours",
+      "as": "Summary"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "stroke": "#ffffff",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "x": {
+          "field": "x_start",
+          "type": "quantitative",
+          "title": "Total hours of formal volunteering in 2025 (millions): wider column = more hours given",
+          "scale": {
+            "domain": [
+              0,
+              620
+            ],
+            "nice": false
+          },
+          "axis": {
+            "values": [
+              0,
+              100,
+              200,
+              300,
+              400,
+              500,
+              600
+            ],
+            "grid": false
+          }
+        },
+        "x2": {
+          "field": "x_end"
+        },
+        "y": {
+          "field": "y_start",
+          "type": "quantitative",
+          "title": "% of volunteers in the age group",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y2": {
+          "field": "y_end"
+        },
+        "color": {
+          "field": "Hours",
+          "type": "ordinal",
+          "sort": [
+            "1–20 hours a year",
+            "21–99 hours a year",
+            "100+ hours a year"
+          ],
+          "scale": {
+            "range": [
+              "#cde2fb",
+              "#6da7ec",
+              "#0d366b"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "title": "Hours given per volunteer:"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "Summary",
+            "title": " "
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.band == 'h100'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -10,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#1f1e1c"
+      },
+      "encoding": {
+        "x": {
+          "field": "x_mid",
+          "type": "quantitative"
+        },
+        "y": {
+          "value": 0
+        },
+        "text": {
+          "field": "age"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.band == 'h100'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -12,
+        "fontSize": 12,
+        "color": "#ffffff"
+      },
+      "encoding": {
+        "x": {
+          "field": "x_mid",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y_end",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "pct",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.band == 'h100' && datum.age == '65+'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": 26,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#ffffff"
+      },
+      "encoding": {
+        "x": {
+          "field": "x_mid",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y_end",
+          "type": "quantitative"
+        },
+        "text": {
+          "value": "% gave 100+ hours"
+        }
+      }
+    }
+  ]
+}
